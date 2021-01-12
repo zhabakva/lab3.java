@@ -9,6 +9,7 @@ import Exceptions.StocksException;
 import Finances.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -87,6 +88,10 @@ public class Oligarch extends Human implements Error {
 
     }
 
+    public Map<Stock, Integer> getStocks() {
+        return stocks;
+    }
+
     public void setCash(double cash) {
         this.cash.setMoney(cash);
     }
@@ -153,5 +158,39 @@ public class Oligarch extends Human implements Error {
                 throw new ByingException("We can't perform the operation because the buyers city doesn't match the barge's\n");
         } else
             throw new ByingException("We can't perform the operation because the barge doesn't sell this type of stocks");
+    }
+    public static class CoolestOligar{
+        private List<Oligarch> oligarchs;
+        public CoolestOligar(List<Oligarch> oligarchs){
+            this.oligarchs = oligarchs;
+        }
+        public void find_coolest() throws StocksException{
+            Oligarch coolest = oligarchs.get(0);
+            int k1 = 0;
+            int k2 = 0;
+
+            if (oligarchs.get(1).getStocks().isEmpty())
+                throw new StocksException(oligarchs.get(1).getName() + " don't have stocks!");
+            else {
+                for (Map.Entry stock : coolest.getStocks().entrySet())
+                    k1 += (int) stock.getValue();
+            }
+
+            for(int i = 1; i < oligarchs.size(); ++i){
+                if (oligarchs.get(i).getStocks().isEmpty())
+                    throw new StocksException(oligarchs.get(i).getName() + " don't have stocks!");
+                else {
+                    for (Map.Entry stock : oligarchs.get(i).getStocks().entrySet())
+                        k2 += (int) stock.getValue();
+                    if (k2 > k1) {
+                        coolest = oligarchs.get(i);
+                        k1 = k2;
+                    }
+                    k2 = 0;
+                }
+
+                System.out.println(coolest.getName() + " is coolest oligarch in the world!!");
+            }
+        }
     }
 }
